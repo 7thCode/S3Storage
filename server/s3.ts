@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 const _crypto = require('crypto');
-const AWS = require('aws-sdk');
+const _AWS = require('aws-sdk');
 
 
 class S3Storage {
@@ -89,7 +89,7 @@ class S3Storage {
 }
 
 
-const s = new S3Storage(AWS, 's3.wasabisys.com', 'ap-northeast-2', '7thcode');
+const s = new S3Storage(_AWS, 's3.wasabisys.com', 'ap-northeast-2', '7thcode');
 
 const chunks: any[] = [];
 
@@ -104,7 +104,7 @@ s.auth((error) => {
 
                 reader.on('end', () => {
                     const fileData = Buffer.concat(chunks);
-                    s.put('backup/qtie.mp4', fileData, 'video/mp4', S3Storage.acls.auth_read, (error) => {
+                    s.put('backup/qtie.mp4', fileData, 'video/mp4', S3Storage.acls.public_read, (error) => {
                         if (!error) {
                             s.list((error: any, data: any) => {
                                 if (!error) {
@@ -115,7 +115,8 @@ s.auth((error) => {
                                         if (!error) {
                                             const writer = fs.createWriteStream('/Users/oda/Desktop/qtie2.mp4');
                                             writer.on("finish", () => {
-                                                s.remove('backup/qtie.mp4', (error) => {
+                                                 console.log("end.");
+                                           /*     s.remove('backup/qtie.mp4', (error) => {
                                                     if (!error) {
                                                         s.list((error: any, data: any) => {
                                                             if (!error) {
@@ -129,7 +130,7 @@ s.auth((error) => {
                                                     } else {
                                                         console.log("remove " + error.message);
                                                     }
-                                                });
+                                                });*/
                                             })
                                             writer.write(data.Body);
                                             writer.end();

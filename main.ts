@@ -2,7 +2,11 @@
  * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
+ *
  */
+
+// Electron Forge
+// https://www.electronjs.org/ja/docs/latest/tutorial/tutorial-packaging
 
 "use strict";
 
@@ -12,6 +16,23 @@ const {app, Menu, BrowserWindow, webFrame, ipcMain, dialog} = require("electron"
 
 const {AppImageUpdater, MacUpdater, NsisUpdater} = require('electron-updater');
 const log = require('electron-log');
+
+const AWS = require('aws-sdk');
+
+const endpoint = new AWS.Endpoint('https://kr.object.ncloudstorage.com');
+const region = 'kr-standard';
+const access_key = 'ACCESS_KEY';
+const secret_key = 'SECRET_KEY';
+
+const S3 = new AWS.S3({
+    endpoint,
+    region,
+    credentials: {
+        accessKeyId : access_key,
+        secretAccessKey: secret_key
+    }
+});
+
 
 namespace Main {
 
@@ -48,6 +69,7 @@ namespace Main {
 					backgroundThrottling: false,
 
 					contextIsolation: false,
+					preload: path.join(__dirname, 'preload.js'),
 				},
 			});
 
@@ -217,6 +239,11 @@ namespace Main {
 		log.error(err);
 		app.quit();     // アプリを終了する (継続しない方が良い)
 	});
+
+	const createBucket = () => {
+
+	}
+
 }
 
 

@@ -1,0 +1,43 @@
+{
+	"extends": "tslint:recommended",
+	"rulesDirectory": [
+		"codelyzer"
+	],
+	"rules": {
+		"no-console": false,
+		"no-var-requires": false,
+		"max-classes-per-file": false,
+		"max-line-length": [
+			true,
+			{
+				"limit": 500
+			}
+		],
+		"no-string-literal": false,
+		"object-literal-sort-keys": false,
+		"object-literal-shorthand": false,
+		"no-shadowed-variable": [
+			false
+		],
+		"no-namespace": false,
+		"only-arrow-functions": false,
+		"no-consecutive-blank-lines": false,
+		"no-trailing-whitespace": false,
+		"indent": [
+			true,
+			"tabs",
+			4
+		],
+		"no-empty": false,
+		"variables-before-functions": true,
+		"variable-name": false,
+
+		"component-selector": [
+			true,
+			"element",
+			"app",
+			"page",
+			"kebab-case"
+		]
+	}
+}

@@ -44,3 +44,6 @@ rootkey.json
 *.js
 .vscode
 public
+test.ts
+cert
+out

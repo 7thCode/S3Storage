@@ -20,3 +20,23 @@ gulp.task('compile', function() {
 gulp.task('default', gulp.series('compile'), function() {
 
 });
+
+
+
+gulp.task('macproductionprebuild', () => {
+	return gulp.src('./config/mac/server/default.js')
+		.pipe(gulp.dest('./config'));
+});
+
+gulp.task('winproductionprebuild', () => {
+	return gulp.src('./config/win/server/default.js')
+		.pipe(gulp.dest('./config'));
+});
+
+gulp.task('macproduction', gulp.series('macproductionprebuild', 'compile'), () => {
+
+});
+
+gulp.task('winproduction', gulp.series('winproductionprebuild', 'compile'), () => {
+
+});
