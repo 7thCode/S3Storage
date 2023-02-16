@@ -1,11 +1,12 @@
 {
-  "name": "S3Storage",
+  "name": "s3storage",
   "version": "1.0.0",
   "description": "S3 interface.",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
     "build": "ng build --source-map --base-href ./ && gulp",
+    "preload": "webpack --config ./src/preload/webpack.js --mode production",
     "package-mac": "ng build --configuration=prod-stage --base-href ./ && gulp macproduction && electron-builder --mac --x64",
     "package-win": "ng build --configuration=prod-stage --base-href ./ && gulp winproduction && electron-builder --win --ia32",
     "code-sign": "node after-sign-mac.js",
@@ -48,8 +49,13 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "tailwindcss": "^3.2.6",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
     "tslint": "^6.1.3",
-    "typescript": "~4.7.2"
+    "typescript": "~4.7.2",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "dependencies": {
     "aws-sdk": "^2.1265.0",
@@ -63,10 +69,12 @@
     "express": "^4.18.2",
     "log4js": "^6.7.1",
     "morgan": "^1.10.0",
+    "node-fetch": "^3.3.0",
     "path": "^0.12.7",
     "rxjs": "~7.5.0",
     "tough-cookie-filestore": "^0.0.1",
     "tslib": "^2.3.0",
+    "tslint": "~6.1.0",
     "zone.js": "~0.11.4"
   }
 }

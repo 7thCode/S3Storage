@@ -10,9 +10,11 @@
 
 "use strict";
 
-import {WebContents} from "electron";
 
-const {app, Menu, BrowserWindow, webFrame, ipcMain, dialog} = require("electron");
+import {WebContents} from "electron";
+import * as os from 'os';
+
+const {app, Menu, BrowserWindow, webFrame, ipcMain, dialog, WebContents} = require("electron");
 
 const {AppImageUpdater, MacUpdater, NsisUpdater} = require('electron-updater');
 const log = require('electron-log');
@@ -25,12 +27,12 @@ const access_key = 'ACCESS_KEY';
 const secret_key = 'SECRET_KEY';
 
 const S3 = new AWS.S3({
-    endpoint,
-    region,
-    credentials: {
-        accessKeyId : access_key,
-        secretAccessKey: secret_key
-    }
+	endpoint,
+	region,
+	credentials: {
+		accessKeyId: access_key,
+		secretAccessKey: secret_key
+	}
 });
 
 
@@ -57,22 +59,29 @@ namespace Main {
 				minHeight: 940,
 				width: 1600,
 				height: 940,
-				titleBarStyle: "hidden",
-				title: "XXX",
-				resizable: true,
-				minimizable: false,
-				fullscreenable: true,
-				skipTaskbar: true,
+		// 		titleBarStyle: "hidden",
+		// 		title: "XXX",
+		// 		resizable: true,
+		// 		minimizable: false,
+		// 		fullscreenable: true,
+		// 		skipTaskbar: true,
 				webPreferences: {
-					nodeIntegration: true,
+					// nodeIntegration: true,
 					nodeIntegrationInWorker: true,
 					backgroundThrottling: false,
 
-					contextIsolation: false,
-					preload: path.join(__dirname, 'preload.js'),
+					// contextIsolation: false,
+
+					// Disabled Node integration
+					nodeIntegration: false,
+					// protect against prototype pollution
+					contextIsolation: true,
+					// turn off remote
+				// 	enableRemoteModule: false,
+
+					preload: path.join(app.getAppPath(), 'dist/preload', 'preload.js')
 				},
 			});
-
 			// Permission
 			const windowSession = mainWindow.webContents.session;
 			windowSession.setPermissionRequestHandler((webContents: WebContents, permission: string, callback: any) => {
@@ -80,78 +89,78 @@ namespace Main {
 			});
 
 			const menuTemplate: any = [
-					{
-						label: "ファイル",
-						submenu: [
-							{
-								label: "AAA...",
-								click: () => {
-									showAboutBox(null);
-								},
+				{
+					label: "ファイル",
+					submenu: [
+						{
+							label: "AAA...",
+							click: () => {
+								showAboutBox(null);
 							},
-							{type: "separator"},
-							{
-								id: 'config-menu',
-								label: "設定...",
-								click: () => {
-									mainWindow.webContents.send("configure");
-								},
-								enabled: true
+						},
+						{type: "separator"},
+						{
+							id: 'config-menu',
+							label: "設定...",
+							click: () => {
+								mainWindow.webContents.send("configure");
 							},
-							{
-								label: "印刷...",
-								click: () => {
+							enabled: true
+						},
+						{
+							label: "印刷...",
+							click: () => {
 
-									mainWindow.webContents.send("print");
+								mainWindow.webContents.send("print");
 
-									const options = {
-										silent: false,
-										printBackground: false,
-										color: false,
-										landscape: true,
-										scaleFactor: 80,
-										pagesPerSheet: 1,
-										copies: 1,
-									}
-									mainWindow.webContents.print(options, (success: boolean, failureReason: string) => {
-									});
-								},
+								const options = {
+									silent: false,
+									printBackground: false,
+									color: false,
+									landscape: true,
+									scaleFactor: 80,
+									pagesPerSheet: 1,
+									copies: 1,
+								}
+								mainWindow.webContents.print(options, (success: boolean, failureReason: string) => {
+								});
 							},
-							{type: "separator"},
-							{
-								label: "quit",
-								click: () => {
-										app.quit();
-								},
+						},
+						{type: "separator"},
+						{
+							label: "quit",
+							click: () => {
+								app.quit();
 							},
-						],
-					},
-					{
-						label: "編集",
-						submenu: [
-							{label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-							{label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-							{type: "separator"},
-							{label: "カット", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-							{label: "コピー", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-							{label: "ペースト", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-							{label: "すべて選択", accelerator: "CmdOrCtrl+A", selector: "selectAll:"},
-						],
-					},
-					{
-						label: "デバッグ",
-						submenu: [
-							{
-								label: "DevTools",
-								click: () => {
-									mainWindow.webContents.openDevTools({mode: "detach"});
-								},
+						},
+					],
+				},
+				{
+					label: "編集",
+					submenu: [
+						{label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
+						{label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
+						{type: "separator"},
+						{label: "カット", accelerator: "CmdOrCtrl+X", selector: "cut:"},
+						{label: "コピー", accelerator: "CmdOrCtrl+C", selector: "copy:"},
+						{label: "ペースト", accelerator: "CmdOrCtrl+V", selector: "paste:"},
+						{label: "すべて選択", accelerator: "CmdOrCtrl+A", selector: "selectAll:"},
+					],
+				},
+				{
+					label: "デバッグ",
+					submenu: [
+						{
+							label: "DevTools",
+							click: () => {
+								mainWindow.webContents.openDevTools({mode: "detach"});
 							},
-						],
-					},
-				];
-				mainMenu = Menu.buildFromTemplate(menuTemplate);
-				mainWindow.webContents.openDevTools({mode: "detach"});
+						},
+					],
+				},
+			];
+			mainMenu = Menu.buildFromTemplate(menuTemplate);
+			mainWindow.webContents.openDevTools({mode: "detach"});
 
 			Menu.setApplicationMenu(mainMenu);
 
@@ -221,13 +230,26 @@ namespace Main {
 
 		app.on("window-all-closed", () => {
 			if (process.platform !== "darwin") {
-					app.quit();
+				app.quit();
 			}
 		});
 
 		app.on("activate", () => {
 			if (BrowserWindow.getAllWindows().length === 0) {
 				createWindow();
+			}
+		});
+
+		ipcMain.on('request-systeminfo', () => {
+			const systemInfo: any = {};
+			systemInfo.Arch = os.arch();
+			systemInfo.Hostname = os.hostname();
+			systemInfo.Platform = os.platform();
+			systemInfo.Release = os.release();
+			const systemInfoString: string = JSON.stringify(systemInfo);
+			console.log("hoge");
+			if (mainWindow) {
+				mainWindow.webContents.send('systeminfo', systemInfoString);
 			}
 		});
 
