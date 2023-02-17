@@ -2,3 +2,28 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+/*
+Before													After
+fxLayout="column"										class="flex-col"
+fxLayout="column" fxLayoutAlign="space-evenly stretch"	class="flex-col space-evenly stretch"
+fxLayout="column" fxLayoutAlign="space-evenly center"	class="flex-col space-evenly align-center"
+fxLayout="column" fxLayoutAlign="center space-evenly"	class="flex-col space-evenly justify-center"
+fxLayout="column" fxLayoutAlign="center stretch"		class="flex-col stretch justify-center"
+fxLayout="column" fxLayoutAlign="center center"			class="flex-col justify-center align-center"
+fxLayout="column" fxLayoutAlign="space-around center"	class="flex-col space-around align-center"
+fxLayout="column" fxLayoutAlign="space-between center"	class="flex-col space-between align-center"
+fxLayout="column" fxLayoutAlign="start stretch"			class="flex-col start stretch"
+fxLayout="column" fxLayoutAlign="start start"			class="flex-col start flex-start"
+
+fxLayout="row"											class="flex-row"
+fxLayout="row" fxLayoutAlign="space-evenly center"		class="flex-row space-evenly align-center"
+fxLayout="row" fxLayoutAlign="space-evenly stretch"		class="flex-row space-evenly align-stretch"
+fxlayout="row" fxLayoutAlign="center center"			class="flex-row justify-center align-center"
+fxLayout="row" fxLayoutAlign="center stretch"			class="flex-row align-center align-stretch"
+fxLayout="row" fxLayoutAlign="start center"				class="flex-row start align-center"
+fxLayout="row" fxLayoutAlign="end center"				class="flex-row end align-center"
+fxLayout="row" fxLayoutAlign="space-between center"		class="flex-row space-between align-center"
+fxLayout="row wrap" fxLayoutAlign="space-evenly center"	class="flex-row flex-wrap space-evenly align-center"
+fxLayout="row wrap" fxLayoutAlign="start start"			class="flex-row flex-wrap start flex-start"
+ */
